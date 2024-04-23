@@ -1,5 +1,6 @@
 ﻿using ASP_proj.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ASP_proj.Controllers
 {
@@ -10,9 +11,66 @@ namespace ASP_proj.Controllers
         {
             _siteContext = siteContext;
         }
+        [Route("/person/index")]
         public IActionResult Index()
         {
-            return View();
+            return View(_siteContext.People.Include(x => x.firstName).ToList());
+        }
+        [HttpGet("/person/create")]
+        public IActionResult Create()
+        {
+            ViewData["Title"] = "Add Person";
+            return View(new Person());
+        }
+        [HttpPost("/person/create")]
+        public async Task<IActionResult> Create([FromForm] Person people, IFormFile? image)
+
+        {
+            ViewData["Title"] = "Add Person";
+            if (!ModelState.IsValid)
+            {
+                return View(people);
+            }
+            //if (image != null)
+            //{
+            //category.Image = await _imageStorage.UploadAsync(image);
+
+            //}
+            await _siteContext.People.AddAsync(people);
+            await _siteContext.SaveChangesAsync();
+            return View("/person/index");
+        }
+
+        [HttpGet("/person/edit/{id}")]
+        public async Task<IActionResult> Edit(int id)
+        {
+            ViewData["Title"] = "Edit Person";
+            return View(await _siteContext.People.FirstAsync(x => x.Id == id));
+        }
+        [HttpPost("/person/edit/{id}")]
+        public async Task<IActionResult> Edit(int id, [FromForm] Person form, IFormFile? Image)
+        {
+            ViewData["Title"] = "Edit Person:";
+            if (!ModelState.IsValid)
+            {
+                return View(form);
+            }
+            var people = await _siteContext.People.FirstOrDefaultAsync(x => x.Id == id);
+            //if (Image != null && Image.Length > 0)
+            //{
+            //var imagePath = Path.Combine(_hostEnvironment.WebRootPath, "images", Image.FileName);
+            //using (var fileStream = new FileStream(imagePath, FileMode.Create))
+            //{
+            //await Image.CopyToAsync(fileStream);
+            //}
+            //events.ImagePath = imagePath;
+            //}
+            people.firstName = form.firstName;
+            people.lastName = form.lastName;
+            people.phoneNumber = form.phoneNumber;
+            people.email = form.email;
+            await _siteContext.SaveChangesAsync();
+            return View("person/index");
         }
     }
 }
