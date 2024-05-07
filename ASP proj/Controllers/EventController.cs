@@ -8,9 +8,11 @@ namespace ASP_proj.Controllers
     public class EventController : Controller
     {
         private readonly SiteContext _siteContext;
-        public EventController(SiteContext siteContext)
+        public readonly ImageStorage _imageStorage;
+        public EventController(SiteContext siteContext, ImageStorage imageStorage)
         {
             _siteContext = siteContext;
+            _imageStorage = imageStorage;
         }
         [Route("/event/index")]
         public IActionResult Index()
