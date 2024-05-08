@@ -38,7 +38,7 @@ namespace ASP_proj.Controllers
             //}
             await _siteContext.People.AddAsync(people);
             await _siteContext.SaveChangesAsync();
-            return View("/person/index");
+            return Redirect("/person/index");
         }
 
         [HttpGet("/person/edit/{id}")]
@@ -70,7 +70,21 @@ namespace ASP_proj.Controllers
             people.phoneNumber = form.phoneNumber;
             people.email = form.email;
             await _siteContext.SaveChangesAsync();
-            return View("person/index");
+            return Redirect("person/index");
+        }
+        [HttpGet("person/delete/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var person = await _siteContext.People.FindAsync(id);
+            return View(person);
+        }
+        [HttpPost("person/delete{id}")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var person = await _siteContext.People.FindAsync(id);
+            _siteContext.People.Remove(person);
+            await _siteContext.SaveChangesAsync();
+            return RedirectToAction("Index", "Person");
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ASP_proj.Models;
+using ASP_proj.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
@@ -41,7 +42,7 @@ namespace ASP_proj.Controllers
                 //}
                 await _siteContext.Events.AddAsync(events);
                 await _siteContext.SaveChangesAsync();
-                return View("/event/index");
+                return Redirect("/event/index");
             }
         
         [HttpGet("/event/edit/{id}")]
@@ -72,7 +73,7 @@ namespace ASP_proj.Controllers
             events.Location = form.Location;
             events.Description = form.Description;
             await _siteContext.SaveChangesAsync();
-            return View("event/index");
+            return Redirect("event/index");
         }
 
     }
