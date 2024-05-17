@@ -42,7 +42,7 @@ namespace ASP_proj.Controllers
                 //}
                 await _siteContext.Events.AddAsync(events);
                 await _siteContext.SaveChangesAsync();
-                return Redirect("/event/index");
+                return RedirectToAction("Index", "Event");
             }
         
         [HttpGet("/event/edit/{id}")]
@@ -73,7 +73,7 @@ namespace ASP_proj.Controllers
             events.Location = form.Location;
             events.Description = form.Description;
             await _siteContext.SaveChangesAsync();
-            return Redirect("event/index");
+            return RedirectToAction("Index", "Event");
         }
 
     }

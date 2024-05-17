@@ -38,7 +38,7 @@ namespace ASP_proj.Controllers
             //}
             await _siteContext.People.AddAsync(people);
             await _siteContext.SaveChangesAsync();
-            return Redirect("/person/index");
+            return RedirectToAction("Index", "Person");
         }
 
         [HttpGet("/person/edit/{id}")]
@@ -70,7 +70,7 @@ namespace ASP_proj.Controllers
             people.phoneNumber = form.phoneNumber;
             people.email = form.email;
             await _siteContext.SaveChangesAsync();
-            return Redirect("person/index");
+            return RedirectToAction("Index", "Person");
         }
         [HttpGet("person/delete/{id}")]
         public async Task<IActionResult> Delete(int id)
